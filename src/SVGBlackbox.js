@@ -28,16 +28,18 @@ const SVGBlackbox = SVGrender => {
     if (isFunction(SVGrender)) {
         return SVGBlackboxHOC(SVGrender);
     } else {
-        const { children, render, x, y, ...props } = SVGrender;
+        const { children, render, x = 0, y = 0, ...props } = SVGrender;
         let anchor;
 
         return (
             <g
                 transform={`translate(${x}, ${y})`}
-                {...props}
                 ref={node => (anchor = node)}
+                {...props}
             >
-                {children ? children(anchor) : render(anchor)}
+                {window.requestAnimationFrame(
+                    () => (children ? children(anchor) : render(anchor))
+                )}
             </g>
         );
     }
