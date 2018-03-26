@@ -50,4 +50,18 @@ describe("SVGBlackbox", () => {
             expect(spy).toHaveBeenCalled();
         });
     });
+
+    it("uses renderprops", () => {
+        let spy = createSpy();
+        render(<SVGBlackbox render={spy} />, node, () => {
+            expect(spy).toHaveBeenCalled();
+        });
+    });
+
+    it("uses function-as-children", () => {
+        let spy = createSpy();
+        render(<SVGBlackbox>{spy}</SVGBlackbox>, node, () => {
+            expect(spy).toHaveBeenCalled();
+        });
+    });
 });

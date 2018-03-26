@@ -19,7 +19,9 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
-    "d3": "^5.0.0"
+    "d3": "^5.0.0",
+    "lodash.isfunction": "^3.0.9",
+    "lodash.isobject": "^3.0.2"
   },
   "peerDependencies": {
     "react": "16.x"
