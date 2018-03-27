@@ -29,18 +29,13 @@ const SVGBlackbox = SVGrender => {
         return SVGBlackboxHOC(SVGrender);
     } else {
         const { children, render, x = 0, y = 0, ...props } = SVGrender;
-        let anchor;
 
         return (
             <g
                 transform={`translate(${x}, ${y})`}
-                ref={node => (anchor = node)}
+                ref={anchor => (children ? children(anchor) : render(anchor))}
                 {...props}
-            >
-                {window.requestAnimationFrame(
-                    () => (children ? children(anchor) : render(anchor))
-                )}
-            </g>
+            />
         );
     }
 };

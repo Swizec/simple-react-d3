@@ -32,6 +32,19 @@ class Demo extends Component {
                             d3.select(anchor).call(axis);
                         }}
                     </SVGBlackbox>
+                    <SVGBlackbox
+                        x={10}
+                        y={90}
+                        render={anchor => {
+                            const scale = d3
+                                .scaleLinear()
+                                .domain([0, 10])
+                                .range([0, 200]);
+                            const axis = d3.axisBottom(scale);
+
+                            d3.select(anchor).call(axis);
+                        }}
+                    />
                 </svg>
             </div>
         );
