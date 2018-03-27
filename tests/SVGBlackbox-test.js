@@ -64,4 +64,15 @@ describe("SVGBlackbox", () => {
             expect(spy).toHaveBeenCalled();
         });
     });
+
+    it("passes props to render method", () => {
+        let spy = createSpy();
+
+        render(<SVGBlackbox width={500}>{spy}</SVGBlackbox>, node, () => {
+            expect(spy.calls[0].arguments[1].width).toEqual(500);
+        });
+    });
+
+    // don't know how to write this test heh
+    it("clears the anchor node on re-render");
 });

@@ -8,6 +8,11 @@ export function SVGBlackboxHOC(SVGrender) {
             SVGrender.call(this);
         }
         componentDidUpdate() {
+            let anchor = this.refs.anchor;
+
+            while (anchor.firstChild) {
+                anchor.removeChild(anchor.firstChild);
+            }
             SVGrender.call(this);
         }
 
@@ -28,12 +33,20 @@ const SVGBlackbox = SVGrender => {
     if (isFunction(SVGrender)) {
         return SVGBlackboxHOC(SVGrender);
     } else {
-        const { children, render, x = 0, y = 0, ...props } = SVGrender;
+        const { children, render, ...props } = SVGrender,
+            { x = 0, y = 0 } = props;
 
         return (
             <g
                 transform={`translate(${x}, ${y})`}
-                ref={anchor => (children ? children(anchor) : render(anchor))}
+                ref={anchor => {
+                    if (anchor) {
+                        while (anchor.firstChild) {
+                            anchor.removeChild(anchor.firstChild);
+                        }
+                    }
+                    children ? children(anchor, props) : render(anchor, props);
+                }}
                 {...props}
             />
         );
