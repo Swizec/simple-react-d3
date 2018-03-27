@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import * as d3 from "d3";
 
-import { SVGBlackbox } from "../../src";
+import { SVGBlackbox, ReactD3 } from "../../src";
 
 const Axis = SVGBlackbox(function() {
     const scale = d3
@@ -13,6 +13,33 @@ const Axis = SVGBlackbox(function() {
 
     d3.select(this.refs.anchor).call(axis);
 });
+
+const SimpleBarchart = ReactD3(
+    {
+        xScale: d3.scaleBand().paddingInner(0.5),
+        yScale: d3.scaleLinear()
+    },
+    function(props) {
+        this.xScale.domain(d3.range(props.data.length)).range([0, props.width]);
+        this.yScale.domain([0, d3.max(props.data)]).range([0, props.height]);
+    },
+    function() {
+        const { data } = this.props;
+
+        return (
+            <g>
+                {data.map((d, i) => (
+                    <rect
+                        x={this.xScale(d)}
+                        y={this.props.height - this.yScale(d)}
+                        width={this.xScale.step()}
+                        height={this.yScale(d)}
+                    />
+                ))}
+            </g>
+        );
+    }
+);
 
 const StackedExample = SVGBlackbox(function() {
     var n = 4, // The number of series.
@@ -251,7 +278,7 @@ class Demo extends Component {
                     <StackedExample width={600} height={300} />
                 </svg>
                 <svg width="800" height="600">
-                    <SVGBlackbox x={0} y={0} width={800} height={600}>
+                    <SVGBlackbox x={0} y={0} width={800} height={300}>
                         {(anchor, props) => {
                             var n = 4, // The number of series.
                                 m = 58; // The number of values per series.
@@ -462,6 +489,14 @@ class Demo extends Component {
                             }
                         }}
                     </SVGBlackbox>
+                </svg>
+                <h1>Full feature integration</h1>
+                <svg width="800" height="600">
+                    <SimpleBarchart
+                        data={d3.range(20)}
+                        width={300}
+                        height={300}
+                    />
                 </svg>
             </div>
         );
