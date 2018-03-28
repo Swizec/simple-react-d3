@@ -497,6 +497,8 @@ class Demo extends Component {
                         width={300}
                         height={300}
                     />
+
+                    {/* <ReactD3 defaultD3={{...}} updateD3={func}>{renderD3}</ReactD3> */}
                 </svg>
             </div>
         );

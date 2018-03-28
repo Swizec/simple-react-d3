@@ -44,8 +44,10 @@ const SVGBlackbox = SVGrender => {
                         while (anchor.firstChild) {
                             anchor.removeChild(anchor.firstChild);
                         }
+                        children
+                            ? children(anchor, props)
+                            : render(anchor, props);
                     }
-                    children ? children(anchor, props) : render(anchor, props);
                 }}
                 {...props}
             />
