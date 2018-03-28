@@ -17,7 +17,8 @@ const Axis = SVGBlackbox(function() {
 const SimpleBarchart = ReactD3(
     {
         xScale: d3.scaleBand().paddingInner(0.5),
-        yScale: d3.scaleLinear()
+        yScale: d3.scaleLinear(),
+        color: d3.scaleSequential(d3.interpolateBlues)
     },
     function(props) {
         this.xScale.domain(d3.range(props.data.length)).range([0, props.width]);
@@ -30,10 +31,12 @@ const SimpleBarchart = ReactD3(
             <g>
                 {data.map((d, i) => (
                     <rect
+                        key={i}
                         x={this.xScale(d)}
                         y={this.props.height - this.yScale(d)}
                         width={this.xScale.step()}
                         height={this.yScale(d)}
+                        style={{ fill: this.color(i / data.length) }}
                     />
                 ))}
             </g>
@@ -274,11 +277,9 @@ class Demo extends Component {
                     </a>{" "}
                     wrapped in <code>SVGBlackbox</code>. Took about 2 minutes.
                 </p>
-                <svg width="600" height="300">
-                    <StackedExample width={600} height={300} />
-                </svg>
-                <svg width="800" height="600">
-                    <SVGBlackbox x={0} y={0} width={800} height={300}>
+                <svg width="1280" height="300">
+                    <StackedExample width={600} height={300} x={0} y={0} />
+                    <SVGBlackbox width={600} height={300} x={640} y={0}>
                         {(anchor, props) => {
                             var n = 4, // The number of series.
                                 m = 58; // The number of values per series.

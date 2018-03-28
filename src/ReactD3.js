@@ -10,10 +10,10 @@ const ReactD3 = function(defaultD3, updateD3, renderD3) {
             );
         }
 
-        componentWillMount() {
+        componentDidMount() {
             updateD3.call(this, this.props);
         }
-        componentWillUpdate(nextProps) {
+        componentDidUpdate(nextProps) {
             updateD3.call(this, nextProps);
         }
 
