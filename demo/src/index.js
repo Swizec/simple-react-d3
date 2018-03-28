@@ -492,12 +492,49 @@ class Demo extends Component {
                     </SVGBlackbox>
                 </svg>
                 <h1>Full feature integration</h1>
-                <svg width="800" height="600">
+                <svg width="800" height="620">
                     <SimpleBarchart
                         data={d3.range(20)}
                         width={300}
                         height={300}
                     />
+                    <ReactD3
+                        defaultD3={{
+                            xScale: d3.scaleBand().paddingInner(0.5),
+                            yScale: d3.scaleLinear(),
+                            color: d3.scaleSequential(d3.interpolateBlues)
+                        }}
+                        updateD3={({ xScale, yScale, ...props }) => {
+                            xScale
+                                .domain(d3.range(props.data.length))
+                                .range([0, props.width]);
+                            yScale
+                                .domain([0, d3.max(props.data)])
+                                .range([0, props.height]);
+                        }}
+                        data={d3.range(20)}
+                        width={300}
+                        height={300}
+                        x={0}
+                        y={310}
+                    >
+                        {({ data, xScale, height, yScale, color, x, y }) => (
+                            <g transform={`translate(${x}, ${y})`}>
+                                {data.map((d, i) => (
+                                    <rect
+                                        key={i}
+                                        x={xScale(d)}
+                                        y={height - yScale(d)}
+                                        width={xScale.step()}
+                                        height={yScale(d)}
+                                        style={{
+                                            fill: color(i / data.length)
+                                        }}
+                                    />
+                                ))}
+                            </g>
+                        )}
+                    </ReactD3>
 
                     {/* <ReactD3 defaultD3={{...}} updateD3={func}>{renderD3}</ReactD3> */}
                 </svg>

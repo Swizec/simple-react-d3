@@ -1,6 +1,10 @@
 import React from "react";
 
-const ReactD3 = function(defaultD3, updateD3, renderD3) {
+export function ReactD3HOC(defaultD3, updateD3, renderD3) {
+    const UsedAsHOC = !!renderD3;
+
+    console.log("used as hoc?", UsedAsHOC);
+
     return class ReactD3 extends React.Component {
         constructor(props) {
             super(props);
@@ -10,17 +14,53 @@ const ReactD3 = function(defaultD3, updateD3, renderD3) {
             );
         }
 
+        get args() {
+            // Avoid passing children and render to functions
+            const { children, render, ...props } = this.props;
+            return Object.assign(
+                props,
+                Object.keys(defaultD3).reduce(
+                    (obj, k) => Object.assign(obj, { [k]: this[k] }),
+                    {}
+                )
+            );
+        }
+
         componentDidMount() {
-            updateD3.call(this, this.props);
+            if (UsedAsHOC) {
+                updateD3.call(this, this.props);
+            } else {
+                updateD3(this.args);
+            }
         }
         componentDidUpdate(nextProps) {
-            updateD3.call(this, nextProps);
+            if (UsedAsHOC) {
+                updateD3.call(this, nextProps);
+            } else {
+                updateD3(this.args);
+            }
         }
 
         render() {
-            return renderD3.call(this);
+            if (UsedAsHOC) {
+                return renderD3.call(this);
+            } else {
+                const { children, render } = this.props;
+
+                return children ? children(this.args) : render(this.args);
+            }
         }
     };
-};
+}
 
-export default ReactD3;
+export default function ReactD3() {
+    if (arguments.length > 2) {
+        return ReactD3HOC(...arguments);
+    } else {
+        const { defaultD3, updateD3, ...props } = arguments[0];
+
+        const Hoc = ReactD3HOC(defaultD3, updateD3);
+
+        return <Hoc {...props} />;
+    }
+}
